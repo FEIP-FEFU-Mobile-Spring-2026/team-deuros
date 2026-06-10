@@ -3,27 +3,28 @@ package com.example.deuros
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.deuros.data.repository.ProductsRepository
+import com.example.deuros.ui.DeurosNavigation
 import com.example.deuros.ui.theme.DeurosTheme
+import com.example.deuros.viewmodel.CatalogViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContent {
             DeurosTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    DeurosApp()
                 }
             }
         }
@@ -31,17 +32,12 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
+fun DeurosApp() {
+    val context = LocalContext.current
+    val repository = ProductsRepository(context)
+    val catalogViewModel: CatalogViewModel = viewModel(
+        factory = CatalogViewModel.Factory(repository)
     )
-}
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    DeurosTheme {
-        Greeting("Android")
-    }
+    DeurosNavigation(catalogViewModel = catalogViewModel)
 }
