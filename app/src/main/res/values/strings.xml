@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Deuros</string>
+    <string name="catalog">Каталог</string>
+    <string name="cart">Корзина</string>
+    <string name="category_new">Новинки</string>
+    <string name="rubles">₽</string>
+    }
 </resources>
