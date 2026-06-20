@@ -10,6 +10,10 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.deuros.data.models.Product
+import java.math.BigDecimal
+import java.text.NumberFormat
+import java.util.Currency
+import java.util.Locale
 
 @Composable
 fun ProductCard(
@@ -73,11 +77,12 @@ fun ProductCard(
 }
 
 fun formatPrice(priceInKopecks: Int): String {
-    val rubles = priceInKopecks / 100
-    val cents = priceInKopecks % 100
-    return if (cents == 0) {
-        "$rubles ₽"
-    } else {
-        "$rubles.$cents ₽"
+    val formatter = NumberFormat.getCurrencyInstance(Locale("ru", "RU")).apply {
+        currency = Currency.getInstance("RUB")
+        val hasKopecks = priceInKopecks % 100 != 0
+        minimumFractionDigits = if (hasKopecks) 2 else 0
+        maximumFractionDigits = if (hasKopecks) 2 else 0
     }
+
+    return formatter.format(BigDecimal.valueOf(priceInKopecks.toLong(), 2))
 }
