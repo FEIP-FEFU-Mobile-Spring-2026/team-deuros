@@ -8,7 +8,9 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.deuros.data.models.Product
 import com.example.deuros.ui.components.ProductCard
+import com.example.deuros.ui.components.ProductDetailsBottomSheet
 import com.example.deuros.viewmodel.CatalogViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -16,6 +18,8 @@ import com.example.deuros.viewmodel.CatalogViewModel
 fun CatalogScreen(
     viewModel: CatalogViewModel
 ) {
+    var selectedProduct by remember { mutableStateOf<Product?>(null) }
+
     val categories by viewModel.categories.collectAsStateWithLifecycle(
         initialValue = emptyList()
     )
@@ -26,34 +30,46 @@ fun CatalogScreen(
         initialValue = emptyList()
     )
 
-    Column(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        if (categories.isNotEmpty()) {
-            PrimaryScrollableTabRow(
-                selectedTabIndex = categories.indexOfFirst { it.first == selectedCategoryId },
-                containerColor = MaterialTheme.colorScheme.surface,
-                edgePadding = 0.dp,
-                modifier = Modifier.fillMaxWidth()
+    Box(modifier = Modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            if (categories.isNotEmpty()) {
+                PrimaryScrollableTabRow(
+                    selectedTabIndex = categories.indexOfFirst { it.first == selectedCategoryId },
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    edgePadding = 0.dp,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    categories.forEach { (id, name) ->
+                        Tab(
+                            selected = id == selectedCategoryId,
+                            onClick = { viewModel.selectCategory(id) },
+                            text = { Text(name) }
+                        )
+                    }
+                }
+            }
+
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(16.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                categories.forEachIndexed { index, (id, name) ->
-                    Tab(
-                        selected = id == selectedCategoryId,
-                        onClick = { viewModel.selectCategory(id) },
-                        text = { Text(name) }
+                items(filteredProducts) { product ->
+                    ProductCard(
+                        product = product,
+                        onClick = { selectedProduct = product }
                     )
                 }
             }
         }
 
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            items(filteredProducts) { product ->
-                ProductCard(product = product)
-            }
+        selectedProduct?.let { product ->
+            ProductDetailsBottomSheet(
+                product = product,
+                onDismiss = { selectedProduct = null }
+            )
         }
     }
 }
