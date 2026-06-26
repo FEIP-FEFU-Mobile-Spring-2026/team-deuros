@@ -95,7 +95,7 @@ fun ProductDetailsBottomSheet(
                 onInfoClick = { showInfoDialog = true }
             )
 
-            Spacer(modifier = Modifier.height(150.dp))
+            Spacer(modifier = Modifier.height(24.dp))
 
             Column(
                 modifier = Modifier

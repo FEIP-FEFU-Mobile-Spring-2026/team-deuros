@@ -37,7 +37,7 @@ class ProductsRepository(context: Context) {
 
     private companion object {
         const val CATALOG_URL = "https://fefu2026spring.deploy.feip.dev/catalog"
-        const val API_TOKEN = "-Cmt7wdwFgDIi1_SRX8hlJIExs0jJKPr4axflLpExAxM"
+        const val API_TOKEN = "Cmt7wdwFgDIi1_SRX8hlJIExs0jJKPr4axflLpExAxM"
         const val NETWORK_TIMEOUT_MS = 15_000
         val HTTP_SUCCESS_RANGE = 200..299
     }
