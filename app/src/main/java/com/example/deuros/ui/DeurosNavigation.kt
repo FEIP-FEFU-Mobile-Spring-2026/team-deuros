@@ -8,7 +8,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.navigation.NavController
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -17,6 +17,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.deuros.R
 import com.example.deuros.ui.cart.CartScreen
 import com.example.deuros.ui.catalog.CatalogScreen
+import com.example.deuros.viewmodel.CartViewModel
 import com.example.deuros.viewmodel.CatalogViewModel
 
 sealed class Screen(val route: String, val title: Int, val icon: androidx.compose.ui.graphics.vector.ImageVector) {
@@ -26,10 +27,16 @@ sealed class Screen(val route: String, val title: Int, val icon: androidx.compos
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DeurosNavigation(catalogViewModel: CatalogViewModel) {
+fun DeurosNavigation(
+    catalogViewModel: CatalogViewModel,
+    cartViewModel: CartViewModel
+) {
     val navController = rememberNavController()
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = backStackEntry?.destination?.route
+    val cartItems by cartViewModel.items.collectAsStateWithLifecycle()
+    val products by catalogViewModel.products.collectAsStateWithLifecycle()
+    val cartCount = cartItems.sumOf { it.quantity }
 
     Scaffold(
         bottomBar = {
@@ -38,7 +45,21 @@ fun DeurosNavigation(catalogViewModel: CatalogViewModel) {
 
                 items.forEach { screen ->
                     NavigationBarItem(
-                        icon = { Icon(screen.icon, contentDescription = null) },
+                        icon = {
+                            if (screen == Screen.Cart && cartCount > 0) {
+                                BadgedBox(
+                                    badge = {
+                                        Badge {
+                                            Text(text = if (cartCount > 99) "99+" else cartCount.toString())
+                                        }
+                                    }
+                                ) {
+                                    Icon(screen.icon, contentDescription = null)
+                                }
+                            } else {
+                                Icon(screen.icon, contentDescription = null)
+                            }
+                        },
                         label = { Text(stringResource(screen.title)) },
                         selected = currentRoute == screen.route,
                         onClick = {
@@ -61,10 +82,25 @@ fun DeurosNavigation(catalogViewModel: CatalogViewModel) {
             modifier = Modifier.padding(paddingValues)
         ) {
             composable(Screen.Catalog.route) {
-                CatalogScreen(viewModel = catalogViewModel)
+                CatalogScreen(
+                    viewModel = catalogViewModel,
+                    onAddToCart = { product, size ->
+                        cartViewModel.addItem(
+                            productId = product.id,
+                            sizeId = size.id
+                        )
+                    }
+                )
             }
             composable(Screen.Cart.route) {
-                CartScreen()
+                CartScreen(
+                    products = products,
+                    cartItems = cartItems,
+                    onIncrement = cartViewModel::incrementItem,
+                    onDecrement = cartViewModel::decrementItem,
+                    onRemove = cartViewModel::removeItem,
+                    onClearCart = cartViewModel::clearCart
+                )
             }
         }
     }

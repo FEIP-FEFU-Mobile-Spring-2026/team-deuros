@@ -77,7 +77,7 @@ fun ProductCard(
 }
 
 fun formatPrice(priceInKopecks: Int): String {
-    val formatter = NumberFormat.getCurrencyInstance(Locale("ru", "RU")).apply {
+    val formatter = NumberFormat.getCurrencyInstance(Locale.forLanguageTag("ru-RU")).apply {
         currency = Currency.getInstance("RUB")
         val hasKopecks = priceInKopecks % 100 != 0
         minimumFractionDigits = if (hasKopecks) 2 else 0

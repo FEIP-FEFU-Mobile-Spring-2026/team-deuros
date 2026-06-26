@@ -13,6 +13,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.deuros.data.repository.ProductsRepository
 import com.example.deuros.ui.DeurosNavigation
 import com.example.deuros.ui.theme.DeurosTheme
+import com.example.deuros.viewmodel.CartViewModel
 import com.example.deuros.viewmodel.CatalogViewModel
 
 class MainActivity : ComponentActivity() {
@@ -38,6 +39,12 @@ fun DeurosApp() {
     val catalogViewModel: CatalogViewModel = viewModel(
         factory = CatalogViewModel.Factory(repository)
     )
+    val cartViewModel: CartViewModel = viewModel(
+        factory = CartViewModel.Factory(context)
+    )
 
-    DeurosNavigation(catalogViewModel = catalogViewModel)
+    DeurosNavigation(
+        catalogViewModel = catalogViewModel,
+        cartViewModel = cartViewModel
+    )
 }
