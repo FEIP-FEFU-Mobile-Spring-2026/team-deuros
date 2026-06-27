@@ -1,5 +1,6 @@
 package com.example.deuros.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -56,6 +57,7 @@ class CatalogViewModel(
                     _uiState.value = CatalogUiState.Content
                 }
                 .onFailure { throwable ->
+                    Log.e(TAG, "Failed to load catalog", throwable)
                     _products.value = emptyList()
                     _categories.value = emptyList()
                     _selectedCategoryId.value = null
@@ -68,6 +70,10 @@ class CatalogViewModel(
 
     fun selectCategory(categoryId: String) {
         _selectedCategoryId.value = categoryId
+    }
+
+    private companion object {
+        const val TAG = "CatalogViewModel"
     }
 
     class Factory(private val repository: ProductsRepository) : ViewModelProvider.Factory {

@@ -45,9 +45,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
 import com.example.deuros.data.models.Product
 import com.example.deuros.data.models.Size
+import com.example.deuros.ui.components.ProductImage
 import com.example.deuros.ui.components.formatPrice
 import com.example.deuros.viewmodel.CartItem
 
@@ -228,9 +228,8 @@ private fun CartLineItem(
                 .padding(12.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            AsyncImage(
-                model = line.product.imageUrl,
-                contentDescription = line.product.name,
+            ProductImage(
+                product = line.product,
                 modifier = Modifier.size(width = 88.dp, height = 110.dp),
                 contentScale = ContentScale.Fit
             )

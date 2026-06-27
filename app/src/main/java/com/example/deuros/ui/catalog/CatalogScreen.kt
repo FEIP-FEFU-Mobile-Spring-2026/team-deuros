@@ -70,6 +70,7 @@ fun CatalogScreen(
         when (uiState) {
             CatalogUiState.Loading -> CatalogLoadingState()
             is CatalogUiState.Error -> CatalogErrorState(
+                message = (uiState as CatalogUiState.Error).message,
                 onRetryClick = viewModel::loadData
             )
             CatalogUiState.Content -> CatalogContent(
@@ -150,6 +151,7 @@ private fun CatalogLoadingState() {
 
 @Composable
 private fun CatalogErrorState(
+    message: String,
     onRetryClick: () -> Unit
 ) {
     Column(
@@ -186,7 +188,7 @@ private fun CatalogErrorState(
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            text = "Подождите немного и повторите попытку. Или не повторяйте...",
+            text = message.ifBlank { "Подождите немного и повторите попытку. Или не повторяйте..." },
             style = MaterialTheme.typography.bodyMedium,
             color = Color(0xFF717B8E),
             textAlign = TextAlign.Center
