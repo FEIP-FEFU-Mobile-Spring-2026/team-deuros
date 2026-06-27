@@ -44,7 +44,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
 import com.example.deuros.data.models.Product
 import com.example.deuros.data.models.Size
 
@@ -153,9 +152,8 @@ private fun ProductImageHeader(product: Product) {
             .fillMaxWidth()
             .height(250.dp)
     ) {
-        AsyncImage(
-            model = product.imageUrl,
-            contentDescription = product.name,
+        ProductImage(
+            product = product,
             modifier = Modifier
                 .align(Alignment.Center)
                 .fillMaxWidth()

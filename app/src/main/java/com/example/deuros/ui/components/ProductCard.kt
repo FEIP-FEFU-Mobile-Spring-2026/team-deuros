@@ -8,7 +8,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
 import com.example.deuros.data.models.Product
 import java.math.BigDecimal
 import java.text.NumberFormat
@@ -34,9 +33,8 @@ fun ProductCard(
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             // Изображение товара
-            AsyncImage(
-                model = product.imageUrl,
-                contentDescription = product.name,
+            ProductImage(
+                product = product,
                 modifier = Modifier
                     .size(100.dp, 120.dp)
                     .padding(4.dp),
