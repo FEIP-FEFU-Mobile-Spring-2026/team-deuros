@@ -51,6 +51,7 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
     implementation(libs.gson)
     implementation(libs.coil.compose)
+    implementation(libs.coil.svg)
     implementation(libs.androidx.navigation.compose.v277)
     implementation(libs.androidx.compose.material.icons.extended.v160)
     implementation(libs.androidx.lifecycle.runtime.compose)
