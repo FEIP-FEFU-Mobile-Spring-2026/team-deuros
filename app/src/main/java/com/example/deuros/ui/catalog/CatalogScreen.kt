@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 import com.example.deuros.data.models.Product
+import com.example.deuros.data.models.Size
 import com.example.deuros.ui.components.ProductCard
 import com.example.deuros.ui.components.ProductDetailsBottomSheet
 import com.example.deuros.viewmodel.CatalogUiState
@@ -49,7 +50,8 @@ private val Brown = Color(0xFFAD7C68)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CatalogScreen(
-    viewModel: CatalogViewModel
+    viewModel: CatalogViewModel,
+    onAddToCart: (Product, Size) -> Unit
 ) {
     var selectedProduct by remember { mutableStateOf<Product?>(null) }
 
@@ -82,6 +84,7 @@ fun CatalogScreen(
         selectedProduct?.let { product ->
             ProductDetailsBottomSheet(
                 product = product,
+                onAddToCart = onAddToCart,
                 onDismiss = { selectedProduct = null }
             )
         }

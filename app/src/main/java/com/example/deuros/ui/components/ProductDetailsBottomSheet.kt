@@ -61,6 +61,7 @@ private val InfoBackground = Color(0xFFF7EFEC)
 @Composable
 fun ProductDetailsBottomSheet(
     product: Product,
+    onAddToCart: (Product, Size) -> Unit,
     onDismiss: () -> Unit
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
@@ -118,7 +119,11 @@ fun ProductDetailsBottomSheet(
                 )
 
                 Button(
-                    onClick = { },
+                    onClick = {
+                        selectedSize?.let { size ->
+                            onAddToCart(product, size)
+                        }
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(48.dp),
